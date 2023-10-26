@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.greenart.mybatis.model.BoardDto;
+import com.greenart.mybatis.model.SearchCondition;
 
 @Repository
 public class BoardDaoImpl implements BoardDao {
@@ -65,6 +66,24 @@ public class BoardDaoImpl implements BoardDao {
 	@Override
 	public int update(BoardDto dto) throws Exception {
 		return session.update(namespace+"update", dto);
+	}
+	
+	@Override
+	public List<BoardDto> searchSelectPage(SearchCondition sc) throws Exception {
+		return session.selectList(namespace+"searchSelectPage", sc);
+	}
+	
+	@Override
+	public int searchResultCnt(SearchCondition sc) throws Exception {
+		return session.selectOne(namespace+"searchResultCnt", sc);
+	}
+	
+	@Override
+	public int updateCommentCnt(Integer bno, Integer comment_cnt) {
+		Map map = new HashMap();
+		map.put("bno", bno);
+		map.put("comment_cnt", comment_cnt);
+		return session.update(namespace+"updateCommentCnt", map);
 	}
 	
 }

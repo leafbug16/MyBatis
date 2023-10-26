@@ -12,16 +12,21 @@ public class PageHandler {
 	private boolean showPrev; // 이전 페이지로 이동하는 링크를 보여줄 것인지의 여부
 	private boolean showNext; // 다음 페이지로 이동하는 링크를 보여줄 것인지의 여부
 	
+	private SearchCondition sc;
 	
-	public PageHandler(int totalCnt, int page, int pageSize) {
-		this.totalCnt=totalCnt;		
-		this.page= page;
-		this.pageSize = pageSize;
-		totalPage = (int)Math.ceil(totalCnt/(double)pageSize); // 올림
-		beginPage = (page-1)/naviSize *naviSize + 1;
+	private void doPaging(int totalCnt, SearchCondition sc) {
+		this.totalCnt = totalCnt;
+		totalPage = (int)Math.ceil(totalCnt/(double)sc.getPageSize()); // 올림
+		beginPage = (sc.getPage()-1)/naviSize *naviSize + 1;
 		endPage = Math.min(beginPage + naviSize-1, totalPage);
 		showPrev = beginPage != 1;
 		showNext = endPage != totalPage;
+	}
+	
+	public PageHandler(int totalCnt, SearchCondition sc) {
+		this.totalCnt=totalCnt;		
+		this.sc = sc;
+		doPaging(totalCnt, sc);
 	}
 	
 	public PageHandler() {
@@ -90,10 +95,21 @@ public class PageHandler {
 	public void setShowNext(boolean showNext) {
 		this.showNext = showNext;
 	}
+	
+	public SearchCondition getSc() {
+		return sc;
+	}
+
+	public void setSc(SearchCondition sc) {
+		this.sc = sc;
+	}
+
 	@Override
 	public String toString() {
 		return "PageHandler [page=" + page + ", pageSize=" + pageSize + ", totalCnt=" + totalCnt + ", naviSize=" + naviSize
 				+ ", totalPage=" + totalPage + ", beginPage=" + beginPage + ", endPage=" + endPage + ", showPrev=" + showPrev
-				+ ", showNext=" + showNext + "]";
+				+ ", showNext=" + showNext + ", sc=" + sc + "]";
 	}
+
+	
 }

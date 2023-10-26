@@ -16,8 +16,6 @@
             <form method="post" action="<c:url value='/board/modify'/>">
             	<h2 style="text-align: center">edit.jsp</h2>
             	<input type="hidden" name="bno" value="${boardDto.bno }"/>
-            	<input type="hidden" name="page" value="${page }"/>
-            	<input type="hidden" name="pageSize" value="${pageSize }"/>
 	            <table class="table table-striped text-center border">
 	                <thead class="bg-light">
 	                </thead>
@@ -30,14 +28,14 @@
 	                    </tr>
 	                </tbody>
 	            </table>
-                <a href="<c:url value='board/list?page=${page }&pageSize=${pageSize }'/>" class="btn btn-outline-light btn-sm float-end">목록</a>
+                <a href="<c:url value='board/list'/>" class="btn btn-outline-light btn-sm float-end">목록</a>
                 <input type="submit" class="btn btn-outline-light btn-sm float-end me-1" value="수정 완료">
             </form>
         </div>
 	</div>
 	<script>
 		let msg=${msg };
-		if(msg=="modify_error") alert("수정 실패")
+		if(msg=="modify_error") alert("수정 실패");
 	</script>
 </body>
 

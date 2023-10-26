@@ -21,14 +21,14 @@
 		      <table id="tsearch">
 		        <tr>
 		          <td>
-		            <select class="form-select form-select-sm" name="searchField" style="width: 130px; display: inline-block">
-		              <option value="title" ${param.searchField eq "title" ? "selected" : "" }>제목+내용</option>
-		              <option value="content" ${param.searchField eq "content" ? "selected" : "" }>제목</option>
-		              <option value="writer" ${param.searchField eq "writer" ? "selected" : "" }>글쓴이</option>
+		            <select class="form-select form-select-sm" name="option" style="width: 130px; display: inline-block">
+		              <option value="A" ${ph.sc.option=='A' || ph.sc.option=='' ? "selected" : "" }>제목+내용</option>
+		              <option value="T" ${ph.sc.option=='T' ? "selected" : "" }>제목</option>
+		              <option value="W" ${ph.sc.option=='W' ? "selected" : "" }>글쓴이</option>
 		            </select>   
-		            <input class="form-control form-control-sm" type="text" name="searchWord" id="search"
-		              value='${ empty param.searchWord ? "" : param.searchWord }' style="width: 300px; display: inline-block">
-		            <button type="button" class="btn btn-outline-light btn-sm">검색</button>
+		            <input class="form-control form-control-sm" type="text" name="keyword" id="search"
+		              value='${ph.sc.keyword }' style="width: 300px; display: inline-block">
+		            <button type="submit" class="btn btn-outline-light btn-sm">검색</button>
 		          </td>
 		        </tr>
 		      </table>
@@ -47,7 +47,7 @@
                 	<c:forEach var="board" items="${list }">
                     <tr>
                         <td>${board.bno }</td>
-                        <td><a href="<c:url value='/board/read?bno=${board.bno }&page=${page }&pageSize=${pageSize }'/>" style="text-decoration: none;">${board.title }</a></td>
+                        <td><a href="<c:url value='/board/read?bno=${board.bno }&${ph.sc.queryString }'/>" style="text-decoration: none;">${board.title }</a></td>
                         <td>${board.writer }</td>
                         <fmt:formatDate value="${board.reg_date }" type="date" pattern="yyyy-MM-dd HH:mm" var="reg_date" />
                         <td>${reg_date }</td>
@@ -63,17 +63,17 @@
 		  <ul class="pagination justify-content-center mt-5">
 		  	<c:if test="${ph.showPrev }">
 			    <li class="page-item">
-			      <a class="page-link" href="<c:url value='/board/list?page=${ph.beginPage-1 }&pageSize=${ph.pageSize }'/>" aria-label="Previous">
+			      <a class="page-link" href="<c:url value='/board/list${ph.sc.getQueryString(ph.beginPage-1) }'/>" aria-label="Previous">
 			        <span aria-hidden="true">&laquo;</span>
 			      </a>
 			    </li>
 		    </c:if>
 		    <c:forEach var="i" begin="${ph.beginPage }" end="${ph.endPage }">
-		    	<li class="page-item ${ph.page==i? 'active':'' }"><a class="page-link" href="<c:url value='/board/list?page=${i }&pageSize=${ph.pageSize }' />">${i }</a></li>
+		    	<li class="page-item ${ph.sc.page==i? 'active':'' }"><a class="page-link" href="<c:url value='/board/list${ph.sc.getQueryString(i) }' />">${i }</a></li>
 		    </c:forEach>
 		    <c:if test="${ph.showNext }">
 			    <li class="page-item">
-			      <a class="page-link" href="<c:url value='/board/list?page=${ph.endPage+1 }&pageSize=${ph.pageSize }'/>" aria-label="Next">
+			      <a class="page-link" href="<c:url value='/board/list${ph.sc.getQueryString(ph.endPage+1) }'/>" aria-label="Next">
 			        <span aria-hidden="true">&raquo;</span>
 			      </a>
 			    </li>
@@ -89,6 +89,7 @@
 		if(msg=="write_ok") alert("성공적으로 등록되었습니다");
 		if(msg=="modify_error") alert("작성자만 수정할 수 있습니다");
 		if(msg=="modify_ok") alert("수정 성공");
+		
 	</script>
 </body>
 

@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.greenart.mybatis.model.BoardDto;
+import com.greenart.mybatis.model.SearchCondition;
 
 public interface BoardDao {
 	
@@ -24,5 +25,11 @@ public interface BoardDao {
 	int count() throws Exception;
 	
 	int update(BoardDto dto) throws Exception;
+	
+	List<BoardDto> searchSelectPage(SearchCondition sc) throws Exception;
+	
+	public int searchResultCnt(SearchCondition sc) throws Exception;
+
+	int updateCommentCnt(Integer bno, Integer comment_cnt);
 
 }

@@ -12,14 +12,41 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.greenart.mybatis.dao.BoardDao;
 import com.greenart.mybatis.model.BoardDto;
+import com.greenart.mybatis.model.SearchCondition;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"file:src/main/webapp/WEB-INF/spring/root-context.xml"})
 public class BoardDaoImpTest2 {
 	    @Autowired
 	    private BoardDao boardDao;
-	    
 	    @Test
+	    public void searchSelectPageTest() throws Exception{
+	    	boardDao.deleteAll();
+	    	for(int i=1; i<=20; i++) {
+	    		BoardDto boardDto = new BoardDto("title"+i, "asdfasdf", "test");
+	    		boardDao.insert(boardDto);
+	    	}
+	    	SearchCondition sc = new SearchCondition(1,10, "title2", "T"); // title2%
+	    	List<BoardDto> list = boardDao.searchSelectPage(sc);
+	    	System.out.println("list= " + list); // 1~20 Сп title2, title20, 
+	    	assertTrue(list.size()==2);
+	    } 
+	
+	    @Test
+	    public void searchResultCntTest() throws Exception{
+	    	boardDao.deleteAll();
+	    	for(int i=1; i<=20; i++) {
+	    		BoardDto boardDto = new BoardDto("title"+i, "asdfasdf", "test");
+	    		boardDao.insert(boardDto);
+	    	}
+	    	SearchCondition sc = new SearchCondition(1,10, "title2", "T"); // title2%
+	    	System.out.println(sc);
+	    	int cnt = boardDao.searchResultCnt(sc);
+	    	System.out.println(cnt);
+	    	assertTrue(cnt==2);
+	    }
+	    
+	    //@Test
 	    public void test() throws Exception {
 	    	boardDao.deleteAll();
 	    	for(int i=1; i<=220; i++) {

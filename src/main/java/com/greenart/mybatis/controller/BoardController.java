@@ -1,5 +1,6 @@
 package com.greenart.mybatis.controller;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -17,6 +18,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.greenart.mybatis.model.BoardDto;
 import com.greenart.mybatis.model.PageHandler;
+import com.greenart.mybatis.model.SearchCondition;
 import com.greenart.mybatis.service.BoardService;
 
 @Controller
@@ -31,25 +33,22 @@ public class BoardController {
 	}
 	
 	@GetMapping("/list")
-	public String list(Integer page, Integer pageSize, HttpServletRequest request, Model m) {
-		if(page==null) page=1;
-		if(pageSize==null) pageSize=10;
-		
+	public String list(SearchCondition sc, HttpServletRequest request, Model m) {	
 		if(!loginCheck(request))
 			return "redirect:/login/form?toURL="+request.getRequestURL();
 		
 		try {
-			int totalCnt = boardService.getCount();
-			PageHandler pageHandler = new PageHandler(totalCnt, page, pageSize);
+			int totalCnt = boardService.getSearchResultCnt(sc);
+			PageHandler pageHandler = new PageHandler(totalCnt, sc);
 			
 			Map map = new HashMap();
-			map.put("offset", (page-1)*pageSize);
-			map.put("pageSize", pageSize);
-			List<BoardDto> list = boardService.getPage(map);
+			List<BoardDto> list = boardService.getSearchResultPage(sc);
 			m.addAttribute("list", list);
-			m.addAttribute("ph", pageHandler);
-			m.addAttribute("page", page);
-			m.addAttribute("pageSize", pageSize);			
+			m.addAttribute("ph", pageHandler);	
+			
+			Date now = new Date();
+			m.addAttribute("now", now);
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -57,28 +56,25 @@ public class BoardController {
 	}
 	
 	@GetMapping("/read")
-	public String read(Integer bno, Integer page, Integer pageSize, HttpServletRequest request, Model m) {
+	public String read(Integer bno, SearchCondition sc, HttpServletRequest request, Model m) {
 		BoardDto boardDto;
 		HttpSession session = request.getSession();
 		String sessionId = session.getAttribute("id")+"";
 		try {
 			boardDto = boardService.read(bno);
 			m.addAttribute("boardDto", boardDto);
-			m.addAttribute("page", page);
-			m.addAttribute("pageSize", pageSize);
 			m.addAttribute("sessionId", sessionId);
 		} catch (Exception e) {
 			System.out.println("board/read 오류");
 			e.printStackTrace();
+			return "redirect:/board/list"+sc.getQueryString();
 		}
 		return "view";
 	}
 	
 	@PostMapping("/remove")
-	public String remove(Integer bno, Integer page, Integer pageSize, HttpSession session, RedirectAttributes redatt) {
+	public String remove(Integer bno, SearchCondition sc, HttpSession session, RedirectAttributes redatt) {
 		try {
-			redatt.addAttribute("page", page);
-			redatt.addAttribute("pageSize", pageSize);
 			String writer = (String)session.getAttribute("id");
 			int rowCnt = boardService.remove(bno, writer);
 			if(rowCnt==1) {
@@ -92,7 +88,7 @@ public class BoardController {
 			e.printStackTrace();
 			redatt.addFlashAttribute("msg", "error");
 		}
-		return "redirect:/board/list?page="+page+"&pageSize="+pageSize;
+		return "redirect:/board/list"+sc.getQueryString();
 	}
 	
 	@GetMapping("/write")
@@ -137,15 +133,14 @@ public class BoardController {
 	}
 	
 	@PostMapping("/modify")
-	public String modifyy(Integer page, Integer pageSize, BoardDto boardDto, Model m, HttpSession session, RedirectAttributes redatt) {
-		System.out.println("modify에서 page, pageSize : " + page + pageSize);
+	public String modifyy(BoardDto boardDto, Model m, HttpSession session, RedirectAttributes redatt) {
 		String writer = session.getAttribute("id")+"";
 		boardDto.setWriter(writer);
 		try {
 			int rowCnt = boardService.modify(boardDto);
 			if(rowCnt!=1) throw new Exception("modify_Error");
 			redatt.addFlashAttribute("msg", "modify_ok");
-			return "redirect:/board/list?page="+page+"&pageSize="+pageSize;
+			return "redirect:/board/list";
 		} catch (Exception e) {
 			e.printStackTrace();
 			m.addAttribute("boardDto", boardDto);

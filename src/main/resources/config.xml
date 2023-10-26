@@ -7,5 +7,7 @@
 	<typeAliases>
 		<typeAlias alias="BoardDto" type="com.greenart.mybatis.model.BoardDto"/>
 		<typeAlias alias="UserDto" type="com.greenart.mybatis.model.User"/>
+		<typeAlias alias="SearchCondition" type="com.greenart.mybatis.model.SearchCondition"/>
+		<typeAlias alias="CommentDto" type="com.greenart.mybatis.model.CommentDto"/>
 	</typeAliases>
 </configuration>

@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- Mapper라고 알려준다 -->
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace는 이름을 구분하기 위한 공간이다 id는 충분히 겹칠 수 있다-->
+<mapper namespace = "com.greenart.commentMapper">
+	<delete id="deleteAll" parameterType="int">
+		DELETE FROM comment WHERE bno = #{bno}
+	</delete>
+	
+	<delete id="delete" parameterType="map">
+		DELETE FROM comment WHERE cno = #{cno} AND commenter = #{commenter}
+	</delete>
+		
+	<select id="count" parameterType="int" resultType="int">
+		SELECT count(*) FROM comment WHERE bno = #{bno}
+	</select>
+	
+	<insert id="insert" parameterType="CommentDto">
+		INSERT INTO comment(bno, comment, commenter)
+		VALUES(#{bno}, #{comment}, #{commenter})
+	</insert>
+	
+	<select id="selectAll" parameterType="int" resultType="CommentDto">
+		SELECT * FROM comment WHERE bno = #{bno} ORDER BY reg_date ASC, cno ASC
+	</select>
+	
+	<select id="select" parameterType="int" resultType="CommentDto">
+		SELECT * FROM comment WHERE cno = #{cno}
+	</select>
+	
+	<update id="update" parameterType="CommentDto">
+		UPDATE comment SET comment = #{comment}, up_date = now()
+		WHERE cno = #{cno} and commenter = #{commenter}
+	</update>
+	
+	
+</mapper>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

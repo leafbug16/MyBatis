@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.greenart.mybatis.dao.BoardDao;
 import com.greenart.mybatis.model.BoardDto;
+import com.greenart.mybatis.model.SearchCondition;
 
 // 실질적인 로직 처리 
 @Service
@@ -61,15 +62,15 @@ public class BoardServiceImpl implements BoardService {
         return boardDao.update(boardDto);
     }
 		
-//	// 검색 결과 게시물 수
-//    @Override
-//	public int getSearchResultCnt(SearchCondition sc) throws Exception {
-//        return boardDao.searchResultCnt(sc);
-//    }
-//    // 검색 결과 조회
-//    @Override
-//	public List<BoardDto> getSearchResultPage(SearchCondition sc) throws Exception {
-//        return boardDao.searchSelectPage(sc);
-//    }
+	// 검색 결과 게시물 수
+    @Override
+	public int getSearchResultCnt(SearchCondition sc) throws Exception {
+        return boardDao.searchResultCnt(sc);
+    }
+    // 검색 결과 조회
+    @Override
+	public List<BoardDto> getSearchResultPage(SearchCondition sc) throws Exception {
+        return boardDao.searchSelectPage(sc);
+    }
     
 }

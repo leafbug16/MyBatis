@@ -41,7 +41,7 @@
         </div>
         <c:choose>
         	<c:when test="${sessionId eq boardDto.writer }">
-		        <a href="<c:url value='/board/list?page=${page }&pageSize=${pageSize }'/>" class="btn btn-outline-light btn-sm float-end">목록</a>
+		        <a href="<c:url value='/board/list?${searchCondition.queryString }'/>" class="btn btn-outline-light btn-sm float-end">목록</a>
 		        <a class="btn btn-outline-danger btn-sm float-end me-1" onclick="deletePost()">삭제</a>
 		        <a href="<c:url value='/board/modify?bno=${boardDto.bno }&page=${page }&pageSize=${pageSize }'/>" class="btn btn-outline-light btn-sm float-end me-1">수정</a>
         	</c:when>
@@ -49,6 +49,7 @@
         		<a href="<c:url value='/board/list?page=${page }&pageSize=${pageSize }'/>" class="btn btn-outline-light btn-sm float-end">목록</a>
         	</c:otherwise>
         </c:choose>
+        <%@include file="comment.jsp"%>
 	</div>
 	
 	<script>
